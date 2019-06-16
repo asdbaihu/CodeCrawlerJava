@@ -1,6 +1,7 @@
 package net.codecrawler;
 
 import java.io.Serializable;
+import java.util.Base64;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +23,7 @@ public class Member implements Serializable {
 	@Column(name = "email")
 	private String email;
 	@Column(name = "mobile")
-	private Integer mobile;
+	private String mobile;
 	@Column(name = "pass")
 	private String pass;
 	@Column(name = "auth")
@@ -32,11 +33,11 @@ public class Member implements Serializable {
 		
 	}
 	
-	public Member (String username, String email, Integer mobile, String pass, String auth) {
+	public Member (String username, String email, String mobile, String pass, String auth) {
 		this.username = username.toLowerCase();;
 		this.email = email.toLowerCase();
 		this.mobile = mobile;
-		this.pass = pass;
+		this.pass = Base64.getEncoder().encodeToString((pass).getBytes());
 		this.auth = auth;
 	}
 
@@ -48,11 +49,11 @@ public class Member implements Serializable {
 		this.username = username.toLowerCase();;
 	}
 
-	public Integer getMobile() {
+	public String getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(Integer mobile) {
+	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
 
@@ -69,7 +70,7 @@ public class Member implements Serializable {
 	}
 
 	public void setPass(String pass) {
-		this.pass = pass;
+		this.pass = Base64.getEncoder().encodeToString((pass).getBytes());
 	}
 	
 	public String getAuth() {

@@ -10,6 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface MemberRepository extends CrudRepository<Member, Long> {
 	
 	List<Member> findByEmail(String email);
-	List<Member> findByUsername(String username);
+	List<Member> findByMobile(String mobile);
 	List<Member> findByAuth(String auth);
 }

@@ -1,7 +1,7 @@
 package net.codecrawler;
 
 import java.util.ArrayList;
-
+import java.util.Comparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,14 +38,16 @@ public class RequestController {
 	@ResponseBody
 	public String findPosts (@PathVariable String blog) {		
 		
-		ArrayList<String> postOrder = new ArrayList<String>();
+		ArrayList<Post> postList = new ArrayList<Post>();
 		
 		for (Post post : postRepository.findByBlog(blog)) {
 
-			postOrder.add(post.getPost());
+			postList.add(post);
 		}
 		
-		String postList = String.join("|, ", postOrder);
+		Comparator<Post> c = (s1, s2) -> s2.getReply().compareTo(s1.getReply());
+		postList.sort(c);
+		
 		String json = g.toJson(postList);
 		
 		return json;

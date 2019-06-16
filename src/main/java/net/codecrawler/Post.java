@@ -36,7 +36,7 @@ public class Post implements Serializable {
 		
 		this.username = username;
 		this.blog = blog;
-		this.post = post;
+		this.post = post.replace(">", "").replace("<", "").replace(";", "");;
 		this.reply = reply;
 		this.stamp = stamp;
 	}
@@ -62,7 +62,7 @@ public class Post implements Serializable {
 	}
 
 	public void setPost(String post) {
-		this.post = post;
+		this.post = post.replace(">", "").replace("<", "").replace(";", "");;
 	}
 	
 	public Integer getReply() {
