@@ -16,7 +16,7 @@ public class Post implements Serializable {
 	private static final long serialVersionUID = -3009157732242241606L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private Long id;
 	@Column(name = "username")
 	private String username;
 	@Column(name = "blog")
@@ -41,7 +41,7 @@ public class Post implements Serializable {
 		this.stamp = stamp;
 	}
 	
-	public Post(String username, String blog, String post, Integer reply, String stamp, long id) {
+	public Post(String username, String blog, String post, Integer reply, String stamp, Long id) {
 		
 		this.username = username;
 		this.blog = blog;
@@ -91,11 +91,11 @@ public class Post implements Serializable {
 		this.stamp = stamp;
 	}
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 }

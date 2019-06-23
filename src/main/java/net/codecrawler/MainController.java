@@ -157,9 +157,9 @@ public class MainController {
 			if (member.getAuth().equals(auth) && pword.equals(confirm)) {
 								
 			
-				for (Post post : postRepository.findByUsername(member.getUsername())) {
+				for (Post post : postRepository.findAll()) {
 
-					if (post.getUsername().equals(uname)) {
+					if (post.getUsername().equals(member.getUsername())) {
 						
 						postRepository.save(new Post(uname, post.getBlog(), post.getPost(), post.getReply(), post.getStamp(), post.getId()));
 					}

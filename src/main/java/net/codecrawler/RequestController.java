@@ -45,7 +45,7 @@ public class RequestController {
 			postList.add(post);
 		}
 		
-		Comparator<Post> c = (s1, s2) -> s2.getReply().compareTo(s1.getReply());
+		Comparator<Post> c = (s1, s2) -> s2.getId().compareTo(s1.getId());
 		postList.sort(c);
 		
 		String json = g.toJson(postList);
