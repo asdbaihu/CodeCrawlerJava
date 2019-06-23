@@ -40,6 +40,16 @@ public class Post implements Serializable {
 		this.reply = reply;
 		this.stamp = stamp;
 	}
+	
+	public Post(String username, String blog, String post, Integer reply, String stamp, long id) {
+		
+		this.username = username;
+		this.blog = blog;
+		this.post = post.replace(">", "").replace("<", "").replace(";", "");;
+		this.reply = reply;
+		this.stamp = stamp;
+		this.id = id;
+	}
 
 	public String getUsername() {
 		return username;
@@ -81,4 +91,11 @@ public class Post implements Serializable {
 		this.stamp = stamp;
 	}
 	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 }

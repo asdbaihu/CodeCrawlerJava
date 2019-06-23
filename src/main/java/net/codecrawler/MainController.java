@@ -49,10 +49,7 @@ public class MainController {
 	}
 	
 	@PostMapping(path="/login")
-	public ModelAndView createUser (@RequestParam("email") String email, @RequestParam("pword") String pword) {
-
-		String auth =  UUID.randomUUID().toString().replace("-", "").substring(0,10);
-		
+	public ModelAndView loginUser (@RequestParam("email") String email, @RequestParam("pword") String pword) {		
 		
 		
 		for (Member member : memberRepository.findByEmail(email)) {
@@ -60,38 +57,38 @@ public class MainController {
 			byte [] decodePass = Base64.getDecoder().decode(member.getPass());
 			
 			if (pword.equals(new String(decodePass))) {
-				auth = member.getAuth();
 				
-				return new ModelAndView("redirect:" + "https://codecrawler.net/welcome/" + auth);
+				return new ModelAndView("redirect:" + "https://codecrawler.net/welcome/" + member.getAuth());
 			}
 		}
 		
 	    return new ModelAndView("redirect:" + "https://codecrawler.net/signup/guest");
 	}
 	
-	@PostMapping(path="/makepost")
-	public ModelAndView makePost (@RequestParam String auth, @RequestParam String username, @RequestParam String blog, @RequestParam String post) {
+	@PostMapping(path="/logout")
+	public ModelAndView createUser (@RequestParam String auth) {
 
-		String stamp = new SimpleDateFormat("MM-dd-YY", Locale.ENGLISH).format(new Date());
+		String newAuth =  UUID.randomUUID().toString().replace("-", "").substring(0,10);
 		
-		Integer reply = 1;
-		
-		for (Post posts : postRepository.findByBlog(blog)) {
+		for (Member member : memberRepository.findByAuth(auth)) {
+
+			if (member.getAuth().equals(auth)) {
+				
+				byte [] decodePass = Base64.getDecoder().decode(member.getPass());
+				
+				memberRepository.save(new Member(member.getUsername(), member.getEmail(), member.getMobile(),
+						new String(decodePass), newAuth, member.getId()));
 			
-			posts.getReply();
+				return new ModelAndView("redirect:" + "https://codecrawler.net/welcome/guest");
+			}
 			
-			reply++;
 		}
 		
-		Post newPost = new Post(username, blog, post, reply, stamp);
-		
-		postRepository.save(newPost);
-		
-		return new ModelAndView("redirect:" + "https://codecrawler.net/" + blog + "/" + auth);
-	}		
+	    return new ModelAndView("redirect:" + "https://codecrawler.net/signup/guest");
+	}
 	
 	@PostMapping(path="/getpass")
-	public ModelAndView getPass (@RequestParam String mobile) {
+	public ModelAndView forgotPass (@RequestParam String mobile) {
 		
 		String password = "";
 		
@@ -116,4 +113,79 @@ public class MainController {
 
 		return new ModelAndView("redirect:" + "https://codecrawler.net/login/guest");
 	}
+	
+	@PostMapping(path="/makepost")
+	public ModelAndView makePost (@RequestParam String auth, @RequestParam String username, @RequestParam String blog, @RequestParam String post) {
+
+		String stamp = new SimpleDateFormat("MM-dd-YY", Locale.ENGLISH).format(new Date());
+		
+		Integer reply = 1;
+		
+		for (Post posts : postRepository.findByBlog(blog)) {
+			
+			posts.getReply();
+			
+			reply++;
+		}
+		
+		Post newPost = new Post(username, blog, post, reply, stamp);
+		
+		postRepository.save(newPost);
+		
+		return new ModelAndView("redirect:" + "https://codecrawler.net/" + blog + "/" + auth + "#comments");
+	}		
+	
+	@PostMapping(path="/deletepost")
+	public ModelAndView deletePost (@RequestParam String blog, @RequestParam String comment, @RequestParam String uname, @RequestParam String auth) {
+		
+		for (Post post : postRepository.findByUsername(uname)) {
+
+			if (post.getPost().equals(comment)) {
+
+				postRepository.delete(post);
+			}
+		}
+		
+		return new ModelAndView("redirect:" + "https://codecrawler.net/" + blog + "/" + auth + "#comments");
+	}
+	
+	@PostMapping(path="/update")
+	public ModelAndView updateUser (@RequestParam("uname") String uname, @RequestParam("email") String email, @RequestParam("mobile") String mobile,  @RequestParam("pword") String pword, @RequestParam("confirm") String confirm, @RequestParam String auth) {
+		
+		for (Member member : memberRepository.findByAuth(auth)) {
+
+			if (member.getAuth().equals(auth) && pword.equals(confirm)) {
+								
+			
+				for (Post post : postRepository.findByUsername(member.getUsername())) {
+
+					if (post.getUsername().equals(uname)) {
+						
+						postRepository.save(new Post(uname, post.getBlog(), post.getPost(), post.getReply(), post.getStamp(), post.getId()));
+					}
+				}
+				
+				memberRepository.save(new Member(uname, email, mobile, pword, auth, member.getId()));
+
+				return new ModelAndView("redirect:" + "https://codecrawler.net/settings/" + auth);
+			}
+		}
+		
+	    return new ModelAndView("redirect:" + "https://codecrawler.net/signup/guest");
+	}
+	
+	@PostMapping(path="/deleteaccount")
+	public ModelAndView deleteUser (@RequestParam String auth) {
+		
+		for (Member member : memberRepository.findByAuth(auth)) {
+
+			if (member.getAuth().equals(auth)) {
+
+				memberRepository.delete(member);
+			}
+		}
+		
+		return new ModelAndView("redirect:" + "https://codecrawler.net/welcome/guest");
+	}
+
 }

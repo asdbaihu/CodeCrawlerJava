@@ -38,7 +38,16 @@ public class Member implements Serializable {
 		this.email = email.toLowerCase();
 		this.mobile = mobile;
 		this.pass = Base64.getEncoder().encodeToString((pass).getBytes());
+		this.auth = auth;	
+	}
+	
+	public Member (String username, String email, String mobile, String pass, String auth, long id) {
+		this.username = username.toLowerCase();;
+		this.email = email.toLowerCase();
+		this.mobile = mobile;
+		this.pass = Base64.getEncoder().encodeToString((pass).getBytes());
 		this.auth = auth;
+		this.id = id;
 	}
 
 	public String getUsername() {
@@ -66,6 +75,7 @@ public class Member implements Serializable {
 	}
 
 	public String getPass() {
+				
 		return pass;
 	}
 
@@ -79,6 +89,14 @@ public class Member implements Serializable {
 
 	public void setAuth(String auth) {
 		this.auth = auth;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }
