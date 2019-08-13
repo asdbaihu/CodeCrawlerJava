@@ -20,8 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/api")
 public class MainController {
 	
-	public static final String ACCOUNT_SID = "AC7112ed2f159a9ee46f84005a6a6c8bc9";
-	public static final String AUTH_TOKEN = "faba32df7d808a741c6a6238ada834c5";
+	public static final String ACCOUNT_SID = "";
+	public static final String AUTH_TOKEN = "";
 
 	@Autowired
 	MemberRepository memberRepository;
